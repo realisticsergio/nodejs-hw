@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(pinoHttp());
 
 app.get('/notes', (req, res) => {
-  res.status(200).jason({
+  res.status(200).json({
     message: 'Retrieved all notes',
   });
 });
@@ -35,7 +35,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).jason({
+  res.status(500).json({
     message: err.message || 'Internal Server Error',
   });
 });
