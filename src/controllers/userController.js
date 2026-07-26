@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors';
 
+import { User } from '../models/user.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const updateUserAvatar = async (req, res, next) => {
@@ -10,12 +11,18 @@ export const updateUserAvatar = async (req, res, next) => {
 
     const result = await saveFileToCloudinary(req.file.buffer, req.user._id);
 
-    req.user.avatar = result.secure_url;
-
-    await req.user.save();
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        avatar: result.secure_url,
+      },
+      {
+        returnDocument: 'after',
+      },
+    );
 
     res.status(200).json({
-      url: result.secure_url,
+      url: user.avatar,
     });
   } catch (error) {
     next(error);
